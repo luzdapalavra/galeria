@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Galeria de Vídeos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      width: 300px;
+      padding: 8px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 8px 12px;
+      border: none;
+      background: #007BFF;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #search, #sort {
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    #videoList {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .video {
+      width: 200px;
+      text-align: center;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .video img {
+      width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .delete {
+      margin-top: 8px;
+      background: #dc3545;
+    }
+    .delete:hover {
+      background: #a71d2a;
+    }
+    .edit {
+      margin-top: 8px;
+      background: #ffc107;
+      color: black;
+    }
+    .edit:hover {
+      background: #e0a800;
+    }
+  </style>
+</head>
+<body>
+  <!-- Cabeçalho com logotipo e título -->
+  <header>
+    <div class="brand">
+      <img src="LOGOLIVE-PRLEONEL.png" alt="Logo da Empresa">
+      <!-- <span>Ministério Luz da Palavra</span> --COMENTEI-->
+    </div>
+    <h1>Galeria de Vídeos</h1>
+  </header>
+
+  <!-- Formulário para adicionar vídeos -->
+  <form id="addForm">
+    <input type="text" id="videoUrl" placeholder="Cole o link do YouTube aqui">
+    <button type="submit">Adicionar</button>
+  </form>
+
+  <!-- Campo de pesquisa e ordenação -->
+  <div id="search">
+    <input type="text" id="searchInput" placeholder="Pesquisar vídeos...">
+  </div>
+  <div id="sort">
+    <button onclick="sortByDate()">Ordenar por Data</button>
+  </div>
+  <!-- Adicionado na V2: Botão "Exportar JSON" -->
+  <div id="io" style="margin: 20px auto; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+  <button type="button" onclick="exportVideos()">Exportar JSON</button>
+	<!-- Adicionado na V2: Botão "Importar JSON" -->
+  <label style="display:inline-flex; align-items:center; gap:8px;">
+    <input type="file" id="importFile" accept="application/json" style="display:none;" />
+    <button type="button" onclick="document.getElementById('importFile').click()">Importar JSON</button>
+  </label>
+	<!-- Adicionado na V2: Botão "Limpar tudo" -->
+  <button type="button" class="delete" onclick="clearAll()">Limpar Tudo</button>
+</div>
+
+  <!-- Lista de vídeos -->
+  <div id="videoList"></div>
+
+  <script>
+    const videoList = document.getElementById('videoList');
+    const addForm = document.getElementById('addForm');
+    const searchInput = document.getElementById('searchInput');
+
+    let videos = JSON.parse(localStorage.getItem('videos')) || [];
+
+    function getYouTubeId(url) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#&?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    function saveVideos() {
+      localStorage.setItem('videos', JSON.stringify(videos));
+    }
+
+    function renderVideos() {
+      videoList.innerHTML = '';
+      const searchTerm = searchInput.value.toLowerCase();
+      videos
+        .filter(v => v.title.toLowerCase().includes(searchTerm))
+        .forEach((video, index) => {
+          const div = document.createElement('div');
+          div.className = 'video';
+          div.innerHTML = `
+            <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank">
+              <img src="https://img.youtube.com/vi/${video.id}/0.jpg" alt="Thumbnail">
+            </a>
+            <p>${video.title}</p>
+            <button class="edit" onclick="editVideo(${index})">Editar</button>
+            <button class="delete" onclick="deleteVideo(${index})">Excluir</button>
+          `;
+          videoList.appendChild(div);
+        });
+    }
+
+    addForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const url = document.getElementById('videoUrl').value;
+      const id = getYouTubeId(url);
+      if (id) {
+        const title = `Vídeo ${videos.length + 1}`;
+        const dateAdded = new Date().toISOString();
+        videos.push({ id, title, dateAdded });
+        saveVideos();
+        document.getElementById('videoUrl').value = '';
+        renderVideos();
+      } else {
+        alert('Link inválido!');
+      }
+    });
+
+    function deleteVideo(index) {
+      videos.splice(index, 1);
+      saveVideos();
+      renderVideos();
+    }
+
+    function editVideo(index) {
+      const newTitle = prompt("Digite o novo título:", videos[index].title);
+      if (newTitle) {
+        videos[index].title = newTitle;
+        saveVideos();
+        renderVideos();
+      }
+    }
+
+    function sortByDate() {
+      videos.sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+      renderVideos();
+    }
+
+<!-- ADICIONADO NA V2 EXPORTAR JSON : baixa um arquivo videos.json com tudo que está salvo -->
+
+  function exportVideos() {
+  // Pega o array atual (em memória). Alternativa: pegar do localStorage.
+  const data = videos;
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  // Nome do arquivo com data/hora
+  const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+  a.download = `videos-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  URL.revokeObjectURL(url);
+}
+    searchInput.addEventListener('input', renderVideos);
+
+    renderVideos();
+  </script>
+</body>
+</html>
