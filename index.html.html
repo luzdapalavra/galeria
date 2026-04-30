@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Galeria de Mídia - Oficial</title>
+  <style>
+    /* ... (Mantendo os estilos visuais de degradê e cards da versão anterior) ... */
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: radial-gradient(900px 500px at 12% 8%, rgba(124,92,255,.20), transparent 55%), #f4f4f9; }
+    .brand { display:flex; justify-content:center; margin: 20px 0; }
+    .brand img { max-height: 192px; width: auto; }
+    .list { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+    .card { width: 260px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; }
+    .card img { width: 100%; border-radius: 8px; }
+    .watch-btn { display: inline-block; padding: 8px 20px; background: #007BFF; color: white; text-decoration: none; border-radius: 4px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand"><img src="LOGOLIVE-PRLEONEL.png" alt="Logo"></div>
+    <h1 style="text-align:center">Galeria de Vídeos e Áudios</h1>
+  </header>
+
+  <div id="videoList" class="list"></div>
+  <div id="audioList" class="list"></div>
+
+  <script>
+    // PASSO DIDÁTICO: 
+    // Sempre que você alterar sua galeria na versão ADM, exporte o JSON.
+    // Abra este arquivo e cole o conteúdo entre as crases abaixo.
+    const DADOS_FIXOS = 
+      {"videos":[{"id":"Z3Xgq9J8Dos","url":"https://www.youtube.com/watch?v=Z3Xgq9J8Dos&list=PLEGNJ7k6eTHSpyuveHgnF-NtN9QdYkNH0","title":"Vídeo 4","date":1777558146377},
+{"id":"LrzdbRydJjE","url":"https://www.youtube.com/watch?v=LrzdbRydJjE&list=PLEGNJ7k6eTHSpyuveHgnF-NtN9QdYkNH0&index=4","title":"Vídeo 6","date":1777558556079}],
+"audiosMeta":[{"id":"58f824e7-4827-4f94-8e48-3a97457b4676","title":"Song_13 ir Irineu.mp3","size":4987104,"date":1777558275915}]}
+    ;
+
+    function renderUsuario() {
+      const vList = document.getElementById('videoList');
+      vList.innerHTML = '<h2>Vídeos</h2>';
+      
+      DADOS_FIXOS.videos.forEach(v => {
+        vList.innerHTML += `
+          <div class="card">
+            <img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg">
+            <p><strong>${v.title}</strong></p>
+            <a href="${v.url}" target="_blank" class="watch-btn">Assistir</a>
+          </div>`;
+      });
+
+      // Nota: Áudios MP3 dependem do arquivo físico. 
+      // Para refletir para todos, os MP3 precisam estar hospedados (ex: Dropbox, Google Drive ou no próprio GitHub).
+    }
+
+    window.onload = renderUsuario;
+  </script>
+</body>
+</html>
