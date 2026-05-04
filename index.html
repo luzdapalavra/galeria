@@ -2,340 +2,54 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Galeria de Vídeos e Áudios</title>
+  <title>Galeria de Mídia - Oficial</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background:
-        radial-gradient(900px 500px at 12% 8%, rgba(124,92,255,.20), transparent 55%),
-        radial-gradient(800px 500px at 88% 18%, rgba(25,211,255,.18), transparent 55%),
-        radial-gradient(900px 600px at 50% 95%, rgba(255,193,7,.12), transparent 55%),
-        #f4f4f9;
-    }
-
-    h1 { text-align: center; color: #333; margin-bottom: 10px; }
- .brand { display:flex; justify-content:center; margin: 10px 0 0; }    
- 
- .brand video {
-  width: 20%;          /* reduz a largura em 80% */
-  height: auto;        /* mantém proporção*/
-  object-fit: cover;   /* garante que o vídeo se ajuste sem distorcer */
-  border-radius: 8px;  /* opcional: cantos arredondados */
-  display: block;      /* remove espaços extras */
-  margin: 0 auto;      /* centraliza o vídeo no cabeçalho */
-}
-    form {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 12px;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    input[type="text"], input[type="file"] {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    button {
-      padding: 8px 12px;
-      border: none;
-      background: #007BFF;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover { background: #0056b3; }
-
-    #search, #sort {
-      margin: 14px auto;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-      margin-bottom: 18px;
-    }
-
-/* Ajuste do tamanho das thumbnais para celulares */
-.card {
-  width: 240px;
-  background: rgba(255,255,255,0.9);
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  text-align: center;
-}
-
-/* Ajuste para telas menores (celulares) */
-@media (max-width: 768px) {
-  .card {
-    width: 90%;        /* ocupa quase toda a largura da tela */
-    max-width: 400px;  /* limite para não ficar exagerado */
-  }
-
-  .card img {
-    width: 100%;       /* thumbnail ocupa toda a largura do card */
-    height: auto;      /* mantém proporção */
-  }
-}
-
-  .card audio { width: 100%; margin-top: 10px; }
-    
-    .delete { background: #dc3545; margin-top: 5px; }
-    .edit { background: #ffc107; color: black; margin-top: 5px; }
-    .muted { color:#555; font-size: 12px; text-align:center; }
-    .section-title { text-align: center; margin-top: 30px; }
+    /* ... (Mantendo os estilos visuais de degradê e cards da versão anterior) ... */
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: radial-gradient(900px 500px at 12% 8%, rgba(124,92,255,.20), transparent 55%), #f4f4f9; }
+    .brand { display:flex; justify-content:center; margin: 20px 0; }
+    .brand img { max-height: 192px; width: auto; }
+    .list { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+    .card { width: 260px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; }
+    .card img { width: 100%; border-radius: 8px; }
+    .watch-btn { display: inline-block; padding: 8px 20px; background: #007BFF; color: white; text-decoration: none; border-radius: 4px; margin-top: 10px; }
   </style>
 </head>
-
 <body>
 
-<header>
-  <div class="brand">
-    <video 
-      src="cabecalho.mp4" 
-      autoplay 
-      muted 
-      loop 
-      playsinline 
-      disablePictureInPicture 
-      controlsList="nodownload nofullscreen noremoteplayback"
-      style="width:20%; height:auto; display:block; margin:0 auto; object-fit:cover; border-radius:8px;">
-    </video>
-  </div>
-</header>
-  <form id="addForm">
-    <input type="text" id="videoUrl" placeholder="Cole o link do YouTube aqui">
-    <button type="submit">Adicionar Vídeo</button>
-  </form>
+  <header>
+    <div class="brand"><img src="LOGOLIVE-PRLEONEL.png" alt="Logo"></div>
+    <h1 style="text-align:center">Galeria Multimídia</h1>
+  </header>
 
-  <form id="addAudioForm">
-    <input type="text" id="audioTitle" placeholder="Título do áudio">
-    <input type="file" id="audioFile" accept="audio/mpeg" multiple>
-    <button type="submit">Adicionar MP3</button>
-  </form>
-
-  <div id="search">
-    <input type="text" id="searchInput" placeholder="Pesquisar..." oninput="renderAll()">
-    <button onclick="sortByDate()">Ordenar por Data</button>
-  </div>
-
-  <div id="io" style="text-align:center; margin-bottom: 20px;">
-    <button onclick="exportJSON()">Exportar JSON</button>
-    <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importJSON(event)">
-    <button onclick="document.getElementById('importFile').click()">Importar JSON</button>
-    <button class="delete" onclick="clearAll()">Limpar Tudo</button>
-  </div>
-
-  <h2 class="section-title">Vídeos</h2>
   <div id="videoList" class="list"></div>
-
-  <h2 class="section-title">Áudios</h2>
   <div id="audioList" class="list"></div>
 
   <script>
-    const VIDEOS_KEY = 'videos_db';
-    const AUDIOS_META_KEY = 'audios_meta_db';
-    
-    let videos = JSON.parse(localStorage.getItem(VIDEOS_KEY)) || [];
-    let audiosMeta = JSON.parse(localStorage.getItem(AUDIOS_META_KEY)) || [];
+    // PASSO DIDÁTICO: 
+    // Sempre que você alterar sua galeria na versão ADM, exporte o JSON.
+    // Abra este arquivo e cole o conteúdo entre as crases abaixo.
+    const DADOS_FIXOS = 
+     {"videos":[{"id":"CUfdPLL4yOE","url":"https://youtu.be/CUfdPLL4yOE","title":"Batismo irmão Júlio - FEV2025","date":1777749920348},{"id":"LqhVkW4r1lA","url":"https://youtu.be/LqhVkW4r1lA","title":"Oração para as Mães - MAI2023","date":1777749920348},{"id":"PqouNy4K6ss","url":"https://youtu.be/PqouNy4K6ss","title":"História do Nascimento de Jesus - DEZ2020","date":1777751408823},{"id":"3L2wzyhwpLg","url":"https://youtu.be/3L2wzyhwpLg","title":"AS 10 Virgens - ABR2026","date":1777749920348},{"id":"_fW6lMR3Wko","url":"https://youtu.be/_fW6lMR3Wko","title":"Aniversário do Pastor - OUT2021","date":1777752614897},{"id":"kGcHM1V1Xts","url":"https://youtu.be/kGcHM1V1Xts","title":"Hinos do Pastor - ABR2015 ","date":1777752651722},{"id":"GQ5CzKh0v18","url":"https://youtu.be/GQ5CzKh0v18","title":"Missionário Frank - OUT2013","date":1777752675377},{"id":"afUYOmpSA2Y","url":"https://youtu.be/afUYOmpSA2Y","title":"Alerta à Igreja - NOV2016","date":1777752709180},{"id":"h7-8e3LpExE","url":"https://youtu.be/h7-8e3LpExE","title":"Visitantes de Trinidad - OUT2016","date":1777898325498},{"id":"peCFBziJiXY","url":"https://youtu.be/peCFBziJiXY","title":"Haverá Luz ao Entradecer - AGO2021","date":1777920691741},{"id":"BzgCHLGVwfw","url":"https://youtu.be/BzgCHLGVwfw","title":"A Volta do Profeta - AGO2021","date":1777920801064},{"id":"6w1vNVYC6P8","url":"https://youtu.be/6w1vNVYC6P8","title":"Ser Como Árvore - NOV2017","date":1777920876080},{"id":"T-Wm36laRGI","url":"https://youtu.be/T-Wm36laRGI","title":"Silêncio no Céu - JUL2021","date":1777920926924},{"id":"8_q-9lixh4U","url":"https://youtu.be/8_q-9lixh4U","title":"Louvor - Ir. Jane Ester - MAI2021","date":1777921024284},{"id":"OQHn2fEz5wA","url":"https://youtu.be/OQHn2fEz5wA","title":"Jeffersonville - IN - OUT2018","date":1777921100936},{"id":"ks2H6r2kuys","url":"https://youtu.be/ks2H6r2kuys","title":"Aniversariantes - SET2024","date":1777921602466},{"id":"KN9LMS86lDM","url":"https://youtu.be/KN9LMS86lDM","title":"Maria Ungindo a Jesus - FEV2017","date":1777922047333},{"id":"-6HDIQWrKJ0","url":"https://youtu.be/-6HDIQWrKJ0","title":"Senhor Deus - MAI2017","date":1777922289223},{"id":"ZvLdb3TCTWc","url":"https://youtu.be/ZvLdb3TCTWc","title":"Culto de Cura Divina - FEV2017","date":1777922590761},{"id":"xObU3QrriVw","url":"https://youtu.be/xObU3QrriVw","title":"O Ladrão da Cruz - JUN2022","date":1777922754302},{"id":"lH2pDkwiAoQ","url":"https://youtu.be/lH2pDkwiAoQ","title":"Deus Cumprindo Sua Palavra - AGO2015","date":1777923067822},{"id":"bS4SfRBHUwo","url":"https://youtu.be/bS4SfRBHUwo","title":"Louvor - Ir. Andre - SET2024","date":1777923227798},{"id":"VuGvPHfhFnk","url":"https://youtu.be/VuGvPHfhFnk","title":"Derramar o Coração - DEZ2021","date":1777923724480},{"id":"b3z_9bQWKW8","url":"https://youtu.be/b3z_9bQWKW8","title":"Testemunho da Irmã Marlene - SET2021","date":1777923889925},{"id":"9f9eoV0Doqo","url":"https://youtu.be/9f9eoV0Doqo","title":"As 5 Porções de Benjamin - JUL2015","date":1777924033469},{"id":"2MNY8ZxBVUo","url":"https://youtu.be/2MNY8ZxBVUo","title":"A Festa dos Tabernáculos - AGO2021","date":1777924154329},{"id":"7JPiTgO63RI","url":"https://youtu.be/7JPiTgO63RI","title":"Tocou-me - Testemunho - JUL2021","date":1777924244229}],"audiosMeta":[{"id":"6453ba38-4591-4ef4-86d4-bbc705144f47","title":"1 Ensina-me.mp3","size":10521305,"date":1777920561338},{"id":"ef5ec319-3a35-4e43-a238-9ea6f064fe0e","title":"4 Cleide Rabelo Oracao de Habacuque.mp3","size":7242687,"date":1777920588077},{"id":"d9bca92b-1d9e-4cfa-b39f-6722fc61688b","title":"16 Milagres_Ir_Irineu.mp3","size":4987104,"date":1777920588078},{"id":"0e3e91b1-1bbd-4d2e-8504-24eac3d492b5","title":"17 Oseas de Paula.mp3","size":122456090,"date":1777920588079},{"id":"d03c0008-ebe9-4e8f-96e2-a9fec95b9609","title":"18 Ron Kenoly God is Able.mp3","size":169511680,"date":1777920588080},{"id":"5d92a175-fa6a-4c29-a826-f3362180a644","title":"19 Ron Kenoly Lift Him Up.mp3","size":122971285,"date":1777920588080},{"id":"b694c980-4f81-42f3-bb46-22ad648b9687","title":"20 Ron Kenoly Sing Out.mp3","size":133292720,"date":1777920588081}]}
+    ;
 
-    // === INDEXED DB SETUP ===
-    const DB_NAME = 'MediaDB';
-    const STORE_NAME = 'audios';
-
-    function openDB() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, 1);
-        request.onupgradeneeded = e => e.target.result.createObjectStore(STORE_NAME);
-        request.onsuccess = e => resolve(e.target.result);
-        request.onerror = e => reject(e.target.error);
+    function renderUsuario() {
+      const vList = document.getElementById('videoList');
+      vList.innerHTML = '<h2>Vídeos</h2>';
+      
+      DADOS_FIXOS.videos.forEach(v => {
+        vList.innerHTML += `
+          <div class="card">
+            <img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg">
+            <p><strong>${v.title}</strong></p>
+            <a href="${v.url}" target="_blank" class="watch-btn">Assistir</a>
+          </div>`;
       });
+
+      // Nota: Áudios MP3 dependem do arquivo físico. 
+      // Para refletir para todos, os MP3 precisam estar hospedados (ex: Dropbox, Google Drive ou no próprio GitHub).
     }
 
-    // === FUNCTIONS ===
-    function getYouTubeId(url) {
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-      const match = url.match(regExp);
-      return (match && match[2].length === 11) ? match[2] : null;
-    }
-
-    async function saveAudioFile(id, file) {
-      const db = await openDB();
-      const tx = db.transaction(STORE_NAME, 'readwrite');
-      tx.objectStore(STORE_NAME).put(file, id);
-    }
-
-    async function getAudioFile(id) {
-      const db = await openDB();
-      return new Promise(resolve => {
-        const tx = db.transaction(STORE_NAME, 'readonly');
-        const req = tx.objectStore(STORE_NAME).get(id);
-        req.onsuccess = () => resolve(req.result);
-      });
-    }
-
-function renderAll() {
-  const term = document.getElementById('searchInput').value.toLowerCase();
-  
-/* 
- // Render Vídeos
-  const vList = document.getElementById('videoList');
-  vList.innerHTML = '';
-  videos.filter(v => v.title.toLowerCase().includes(term)).forEach((v, i) => {
-    vList.innerHTML += `
-      <div class="card">
-        <a href="${v.url}" target="_blank">
-          <img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="Thumbnail do vídeo ${v.title}">
-        </a>
-        <p><strong>${v.title}</strong></p>
-        <button class="delete" onclick="deleteVideo(${i})">Excluir</button>
-      </div>`;
-  });
-*/
-
-//FUNÇAO EDITAR TÍTULOS DOS VIDEOS
-
-// Render Vídeos
-const vList = document.getElementById('videoList');
-vList.innerHTML = '';
-videos.filter(v => v.title.toLowerCase().includes(term)).forEach((v, i) => {
-  vList.innerHTML += `
-    <div class="card">
-      <a href="${v.url}" target="_blank">
-        <img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="Thumbnail do vídeo ${v.title}">
-      </a>
-      <p><strong id="title-${i}">${v.title}</strong></p>
-      <button class="edit" onclick="editVideoTitle(${i})">Editar Título</button>
-      <button class="delete" onclick="deleteVideo(${i})">Excluir</button>
-    </div>`;
-});
-
-  // Render Áudios
-  const aList = document.getElementById('audioList');
-  aList.innerHTML = '';
-  audiosMeta.filter(a => a.title.toLowerCase().includes(term)).forEach(async (a) => {
-    const blob = await getAudioFile(a.id);
-    const url = blob ? URL.createObjectURL(blob) : '#';
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <p><strong>${a.title}</strong></p>
-      <audio controls src="${url}"></audio>
-      <p class="muted">${(a.size/1024/1024).toFixed(2)} MB</p>
-      <button class="delete" onclick="deleteAudio('${a.id}')">Excluir</button>
-    `;
-    aList.appendChild(card);
-  });
-}
-
-    // === EVENTS ===
-    document.getElementById('addForm').onsubmit = e => {
-      e.preventDefault();
-      const url = document.getElementById('videoUrl').value;
-      const id = getYouTubeId(url);
-      if(!id) return alert('Link inválido');
-      videos.push({ id, url, title: 'Vídeo ' + (videos.length + 1), date: Date.now() });
-      localStorage.setItem(VIDEOS_KEY, JSON.stringify(videos));
-      renderAll();
-      e.target.reset();
-    };
-
-    document.getElementById('addAudioForm').onsubmit = async e => {
-      e.preventDefault();
-      const files = document.getElementById('audioFile').files;
-      const titleBase = document.getElementById('audioTitle').value;
-
-      for(let file of files) {
-        const id = crypto.randomUUID();
-        await saveAudioFile(id, file);
-        audiosMeta.push({ 
-          id, 
-          title: titleBase || file.name, 
-          size: file.size, 
-          date: Date.now() 
-        });
-      }
-      localStorage.setItem(AUDIOS_META_KEY, JSON.stringify(audiosMeta));
-      renderAll();
-      e.target.reset();
-    };
-
-    function deleteVideo(i) {
-      videos.splice(i, 1);
-      localStorage.setItem(VIDEOS_KEY, JSON.stringify(videos));
-      renderAll();
-    }
-
-    async function deleteAudio(id) {
-      const db = await openDB();
-      db.transaction(STORE_NAME, 'readwrite').objectStore(STORE_NAME).delete(id);
-      audiosMeta = audiosMeta.filter(a => a.id !== id);
-      localStorage.setItem(AUDIOS_META_KEY, JSON.stringify(audiosMeta));
-      renderAll();
-    }
-
-    function exportJSON() {
-      const data = JSON.stringify({ videos, audiosMeta });
-      const blob = new Blob([data], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'backup_galeria.json';
-      a.click();
-    }
-
-    function importJSON(event) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        const data = JSON.parse(e.target.result);
-        videos = data.videos || [];
-        audiosMeta = data.audiosMeta || [];
-        localStorage.setItem(VIDEOS_KEY, JSON.stringify(videos));
-        localStorage.setItem(AUDIOS_META_KEY, JSON.stringify(audiosMeta));
-        renderAll();
-      };
-      reader.readAsText(event.target.files[0]);
-    }
-
-    function clearAll() {
-      if(confirm('Limpar tudo?')) {
-        localStorage.clear();
-        openDB().then(db => {
-          db.transaction(STORE_NAME, 'readwrite').objectStore(STORE_NAME).clear();
-          location.reload();
-        });
-      }
-    }
-//EDITAR TÍTULO
-
-function editVideoTitle(index) {
-  const novoTitulo = prompt("Digite o novo título para o vídeo:", videos[index].title);
-  if (novoTitulo && novoTitulo.trim() !== "") {
-    videos[index].title = novoTitulo.trim();
-    localStorage.setItem(VIDEOS_KEY, JSON.stringify(videos));
-    renderAll();
-  }
-}
- 
-function sortByDate() {
-      videos.sort((a,b) => b.date - a.date);
-      audiosMeta.sort((a,b) => b.date - a.date);
-      renderAll();
-    }
-
-    // Init
-    renderAll();
+    window.onload = renderUsuario;
   </script>
 </body>
 </html>
-
