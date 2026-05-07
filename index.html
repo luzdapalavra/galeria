@@ -80,38 +80,6 @@
       text-overflow: ellipsis;
     }
 
-/* começa aqui - Responsividade para celular em posição vertical */
-.list {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* padrão: 4 colunas */
-  gap: 10px;
-}   
-
-/* continua aqui Responsividade para celular em posição vertical */
-    @media (max-width: 480px) and (orientation: portrait) {
-      .list {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .card img {
-        max-height: 140px;
-      }
-      .card p strong {
-        font-size: 14px;
-      }
-    }
-
-    /* Responsividade para celular em posição horizontal */
-    @media (max-width: 768px) and (orientation: landscape) {
-      .list {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      .card img {
-        max-height: 120px;
-      }
-      .card p strong {
-        font-size: 13px;
-      }
-    }
 
     /* Botão voltar ao topo */
     #backToTop {
